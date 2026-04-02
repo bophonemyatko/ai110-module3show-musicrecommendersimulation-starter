@@ -17,14 +17,20 @@ Replace this paragraph with your own summary of what your version does.
 
 ## How The System Works
 
+In real world recommendation system, it's a real time live model algorithm working to make sure a song is ready for us after listening. It learn from other users(users with the same music taste) what songs they listen to afterward, so that they can recommend the same song. It's like an implication, if a user or multiple users listens to song B right after A, the users who listened to song A might also listens to song B. That's is collabaritive filtering. Another way is content based filtering, where the system breaks down a song into different attributes and give them a numeric score and recommend a song with the similar or exact score. 
+
 Explain your design in plain language.
 
 Some prompts to answer:
 
 - What features does each `Song` use in your system
   - For example: genre, mood, energy, tempo
+Each song will use genre, mood, energy, and danceability
+
 - What information does your `UserProfile` store
 - How does your `Recommender` compute a score for each song
+Currently: genre_match(0.25), mood_match(0.25), energy(0.2), acousticness(0.2), valence(0.15)
+
 - How do you choose which songs to recommend
 
 You can include a simple diagram or bullet list if helpful.
