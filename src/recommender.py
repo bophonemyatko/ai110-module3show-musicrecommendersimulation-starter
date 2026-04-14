@@ -42,12 +42,7 @@ MOOD_CLUSTERS = {
 
 
 def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
-    """
-    Scores a single song against the user's taste profile.
-    Returns a tuple of (total_score, reasons) where:
-      - total_score is a float between 0.0 and 1.0
-      - reasons is a list of strings explaining each component
-    """
+    """Return a (score, reasons) tuple rating a song 0.0–1.0 against the user's taste profile."""
     score = 0.0
     reasons = []
 
@@ -125,18 +120,17 @@ class Recommender:
         self.songs = songs
 
     def recommend(self, user: UserProfile, k: int = 5) -> List[Song]:
+        """Return the top k songs ranked by score for the given user profile."""
         # TODO: Implement recommendation logic
         return self.songs[:k]
 
     def explain_recommendation(self, user: UserProfile, song: Song) -> str:
+        """Return a human-readable string explaining why a song was recommended."""
         # TODO: Implement explanation logic
         return "Explanation placeholder"
 
 def load_songs(csv_path: str) -> List[Dict]:
-    """
-    Loads songs from a CSV file.
-    Required by src/main.py
-    """
+    """Read songs.csv and return a list of dicts with numeric fields cast to int/float."""
     songs = []
     with open(csv_path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -150,11 +144,8 @@ def load_songs(csv_path: str) -> List[Dict]:
             songs.append(row)
     return songs
 
-def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tuple[Dict, float, str]]:
-    """
-    Functional implementation of the recommendation logic.
-    Required by src/main.py
-    """
-    # TODO: Implement scoring and ranking logic
-    # Expected return format: (song_dict, score, explanation)
-    return []
+def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tuple[Dict, float, List[str]]]:
+    """Score every song, sort highest to lowest, and return the top k as (song, score, reasons) tuples."""
+    scored = [(song, *score_song(user_prefs, song)) for song in songs]
+    scored.sort(key=lambda x: x[1], reverse=True)
+    return scored[:k]

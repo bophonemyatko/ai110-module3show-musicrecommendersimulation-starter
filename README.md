@@ -55,6 +55,7 @@ Genre and mood use similarity clusters instead of pure exact matching so that cl
 Every song in the catalog is scored using the formula above. Songs are then sorted from highest score to lowest, and the top `k` (default: 5) are returned as recommendations.
 
 ---
+![alt text](image.png)
 
 ## Getting Started
 
