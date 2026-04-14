@@ -19,21 +19,40 @@ Replace this paragraph with your own summary of what your version does.
 
 In real world recommendation system, it's a real time live model algorithm working to make sure a song is ready for us after listening. It learn from other users(users with the same music taste) what songs they listen to afterward, so that they can recommend the same song. It's like an implication, if a user or multiple users listens to song B right after A, the users who listened to song A might also listens to song B. That's is collabaritive filtering. Another way is content based filtering, where the system breaks down a song into different attributes and give them a numeric score and recommend a song with the similar or exact score. 
 
-Explain your design in plain language.
+This system uses content-based filtering. Every song in the catalog is scored against a user's taste profile, and the top-scoring songs are returned as recommendations. There are no other users involved — the system only looks at song attributes and what the user says they like.
 
-Some prompts to answer:
+**What features does each `Song` use?**
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-Each song will use genre, mood, energy, and danceability
+Each song carries four attributes the recommender scores against:
+- `genre` — the musical genre (e.g. pop, lofi, metal)
+- `mood` — the emotional feel (e.g. energetic, chill, melancholic)
+- `energy` — a float from 0.0 (very calm) to 1.0 (very intense)
+- `acousticness` — a float from 0.0 (fully produced) to 1.0 (fully acoustic)
 
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-Currently: genre_match(0.25), mood_match(0.25), energy(0.2), acousticness(0.2), valence(0.15)
+**What information does the `UserProfile` store?**
 
-- How do you choose which songs to recommend
+The user profile stores four preference fields that mirror the song attributes:
+- `favorite_genre` — the genre the user prefers most
+- `favorite_mood` — the mood the user prefers most
+- `target_energy` — the energy level they are aiming for (0.0–1.0)
+- `likes_acoustic` — whether they prefer acoustic-sounding songs (True/False)
 
-You can include a simple diagram or bullet list if helpful.
+**How does the `Recommender` compute a score for each song?**
+
+Each song receives a total score between 0.0 and 1.0, built from four weighted rules:
+
+| Rule | Weight | How it works |
+|---|---|---|
+| Genre match | 0.25 | Exact match → full points. Same genre cluster (e.g. pop and indie pop) → half points. Unrelated → 0. |
+| Mood match | 0.25 | Exact match → full points. Same mood cluster (e.g. energetic and intense) → half points. Unrelated → 0. |
+| Energy proximity | 0.35 | Continuous score: `(1 - abs(song.energy - target_energy)) × 0.35`. Closer = higher score. |
+| Acousticness | 0.15 | If `likes_acoustic` is True: `song.acousticness × 0.15`. Otherwise the inverse. |
+
+Genre and mood use similarity clusters instead of pure exact matching so that closely related genres and moods still earn partial credit rather than scoring zero.
+
+**How do we choose which songs to recommend?**
+
+Every song in the catalog is scored using the formula above. Songs are then sorted from highest score to lowest, and the top `k` (default: 5) are returned as recommendations.
 
 ---
 
