@@ -67,16 +67,16 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
         reasons.append(f"mood similar to {user_mood}: {song_mood} (+0.12)")
 
     # --- Rule 3: Energy proximity (max 0.35) ---
-    energy_contribution = (1.0 - abs(song["energy"] - user_prefs["target_energy"])) * 0.35
+    energy_contribution = (1.0 - abs(song["energy"] - user_prefs["target_energy"])) * 0.30
     score += energy_contribution
     reasons.append(f"energy {song['energy']:.2f} vs target {user_prefs['target_energy']:.2f} (+{energy_contribution:.2f})")
 
     # --- Rule 4: Acousticness bonus (max 0.15) ---
     if user_prefs["likes_acoustic"]:
-        acoustic_contribution = song["acousticness"] * 0.15
+        acoustic_contribution = song["acousticness"] * 0.20
         reasons.append(f"acousticness {song['acousticness']:.2f} (likes acoustic) (+{acoustic_contribution:.2f})")
     else:
-        acoustic_contribution = (1.0 - song["acousticness"]) * 0.15
+        acoustic_contribution = (1.0 - song["acousticness"]) * 0.20
         reasons.append(f"acousticness {song['acousticness']:.2f} (prefers produced) (+{acoustic_contribution:.2f})")
     score += acoustic_contribution
 

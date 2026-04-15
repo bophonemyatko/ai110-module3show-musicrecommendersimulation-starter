@@ -56,6 +56,9 @@ Every song in the catalog is scored using the formula above. Songs are then sort
 
 ---
 ![alt text](image.png)
+![alt text](image-1.png)
+![alt text](image-2.png)
+![alt text](image-3.png)
 
 ## Getting Started
 
